@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Riza — Identity · 2026</title>
+  <style>
+    /* ================================================================
+       RESET & BASE
+       ================================================================ */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #05080e;
+      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+      padding: 24px;
+      background-image:
+        radial-gradient(circle at 10% 15%, rgba(120, 80, 255, 0.18) 0%, transparent 40%),
+        radial-gradient(circle at 90% 85%, rgba(0, 230, 200, 0.12) 0%, transparent 40%),
+        radial-gradient(circle at 50% 50%, rgba(255, 60, 120, 0.05) 0%, transparent 50%),
+        radial-gradient(circle at 25% 80%, rgba(255, 200, 50, 0.04) 0%, transparent 35%),
+        radial-gradient(circle at 75% 20%, rgba(0, 150, 255, 0.06) 0%, transparent 35%),
+        radial-gradient(circle at 50% 100%, rgba(100, 50, 200, 0.08) 0%, transparent 45%);
+      background-attachment: fixed;
+    }
+
+    /* ================================================================
+       KARTU UTAMA — dengan perspektif 3D
+       ================================================================ */
+    .card {
+      max-width: 780px;
+      width: 100%;
+      background: rgba(8, 14, 28, 0.45);
+      backdrop-filter: blur(48px) saturate(1.4);
+      -webkit-backdrop-filter: blur(48px) saturate(1.4);
+      border-radius: 80px;
+      padding: 72px 60px 52px;
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      box-shadow:
+        0 80px 180px rgba(0, 0, 0, 0.85),
+        inset 0 1px 0 rgba(255, 255, 255, 0.03);
+      position: relative;
+      overflow: hidden;
+      text-align: center;
+      transition: transform 0.1s ease;
+      transform-style: preserve-3d;
+      perspective: 1000px;
+      will-change: transform;
+    }
+
+    /* ================================================================
+       SEMUA EFEK VISUAL TETAP BERJALAN
+       ================================================================ */
+    .card::before {
+      content: '';
+      position: absolute;
+      width: 700px;
+      height: 700px;
+      background: radial-gradient(circle, rgba(140, 90, 255, 0.20) 0%, transparent 55%);
+      top: -45%;
+      right: -30%;
+      border-radius: 50%;
+      pointer-events: none;
+      animation: orbit1 22s ease-in-out infinite alternate;
+      z-index: 0;
+    }
+
+    .card::after {
+      content: '';
+      position: absolute;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(0, 230, 200, 0.12) 0%, transparent 55%);
+      bottom: -40%;
+      left: -30%;
+      border-radius: 50%;
+      pointer-events: none;
+      animation: orbit2 26s ease-in-out infinite alternate-reverse;
+      z-index: 0;
+    }
+
+    .card .glow-3 {
+      position: absolute;
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(255, 100, 150, 0.08) 0%, transparent 60%);
+      top: 10%;
+      left: 20%;
+      border-radius: 50%;
+      pointer-events: none;
+      animation: orbit3 30s ease-in-out infinite alternate;
+      z-index: 0;
+    }
+
+    @keyframes orbit1 {
+      0% { transform: translate(0, 0) scale(1) rotate(0deg); }
+      100% { transform: translate(-40px, 50px) scale(1.30) rotate(15deg); }
+    }
+    @keyframes orbit2 {
+      0% { transform: translate(0, 0) scale(1) rotate(0deg); }
+      100% { transform: translate(50px, -40px) scale(1.35) rotate(-10deg); }
+    }
+    @keyframes orbit3 {
+      0% { transform: translate(0, 0) scale(1); }
+      100% { transform: translate(30px, 20px) scale(1.40); }
+    }
+
+    /* ================================================================
+       PARTIKEL MIKRO
+       ================================================================ */
+    .micro-particles {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+    .micro-particles span {
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.03);
+      animation: drift 30s infinite linear;
+    }
+    .micro-particles span:nth-child(1) { top: 5%; left: 8%; width: 4px; height: 4px; animation-duration: 24s; }
+    .micro-particles span:nth-child(2) { top: 78%; left: 92%; width: 5px; height: 5px; animation-duration: 32s; opacity: 0.5; }
+    .micro-particles span:nth-child(3) { top: 42%; left: 3%; width: 3px; height: 3px; animation-duration: 26s; }
+    .micro-particles span:nth-child(4) { top: 90%; left: 18%; width: 6px; height: 6px; animation-duration: 30s; opacity: 0.4; }
+    .micro-particles span:nth-child(5) { top: 12%; left: 95%; width: 4px; height: 4px; animation-duration: 22s; }
+    .micro-particles span:nth-child(6) { top: 58%; left: 97%; width: 5px; height: 5px; animation-duration: 36s; }
+    .micro-particles span:nth-child(7) { top: 25%; left: 48%; width: 3px; height: 3px; animation-duration: 27s; }
+    .micro-particles span:nth-child(8) { top: 72%; left: 55%; width: 7px; height: 7px; animation-duration: 29s; opacity: 0.3; }
+    .micro-particles span:nth-child(9) { top: 8%; left: 32%; width: 4px; height: 4px; animation-duration: 25s; }
+    .micro-particles span:nth-child(10) { top: 95%; left: 72%; width: 5px; height: 5px; animation-duration: 33s; }
+    .micro-particles span:nth-child(11) { top: 35%; left: 15%; width: 2px; height: 2px; animation-duration: 28s; }
+    .micro-particles span:nth-child(12) { top: 50%; left: 85%; width: 6px; height: 6px; animation-duration: 34s; opacity: 0.35; }
+    .micro-particles span:nth-child(13) { top: 15%; left: 65%; width: 3px; height: 3px; animation-duration: 23s; }
+    .micro-particles span:nth-child(14) { top: 80%; left: 35%; width: 5px; height: 5px; animation-duration: 31s; }
+    .micro-particles span:nth-child(15) { top: 45%; left: 55%; width: 4px; height: 4px; animation-duration: 26s; }
+    .micro-particles span:nth-child(16) { top: 20%; left: 78%; width: 6px; height: 6px; animation-duration: 35s; opacity: 0.3; }
+    .micro-particles span:nth-child(17) { top: 68%; left: 12%; width: 3px; height: 3px; animation-duration: 29s; }
+    .micro-particles span:nth-child(18) { top: 32%; left: 92%; width: 5px; height: 5px; animation-duration: 27s; }
+    .micro-particles span:nth-child(19) { top: 55%; left: 42%; width: 4px; height: 4px; animation-duration: 32s; }
+    .micro-particles span:nth-child(20) { top: 88%; left: 5%; width: 6px; height: 6px; animation-duration: 24s; opacity: 0.4; }
+    .micro-particles span:nth-child(21) { top: 10%; left: 52%; width: 3px; height: 3px; animation-duration: 30s; }
+    .micro-particles span:nth-child(22) { top: 62%; left: 75%; width: 5px; height: 5px; animation-duration: 28s; }
+    .micro-particles span:nth-child(23) { top: 28%; left: 35%; width: 4px; height: 4px; animation-duration: 33s; }
+    .micro-particles span:nth-child(24) { top: 75%; left: 82%; width: 6px; height: 6px; animation-duration: 25s; opacity: 0.35; }
+    .micro-particles span:nth-child(25) { top: 48%; left: 22%; width: 3px; height: 3px; animation-duration: 31s; }
+    .micro-particles span:nth-child(26) { top: 15%; left: 42%; width: 5px; height: 5px; animation-duration: 27s; }
+    .micro-particles span:nth-child(27) { top: 85%; left: 48%; width: 4px; height: 4px; animation-duration: 34s; }
+    .micro-particles span:nth-child(28) { top: 38%; left: 68%; width: 6px; height: 6px; animation-duration: 26s; opacity: 0.3; }
+    .micro-particles span:nth-child(29) { top: 5%; left: 78%; width: 3px; height: 3px; animation-duration: 29s; }
+    .micro-particles span:nth-child(30) { top: 72%; left: 28%; width: 5px; height: 5px; animation-duration: 32s; }
+    .micro-particles span:nth-child(31) { top: 95%; left: 55%; width: 4px; height: 4px; animation-duration: 23s; opacity: 0.4; }
+    .micro-particles span:nth-child(32) { top: 22%; left: 10%; width: 6px; height: 6px; animation-duration: 30s; }
+
+    @keyframes drift {
+      0% { transform: translate(0, 0) scale(1); opacity: 0.1; }
+      50% { transform: translate(70px, -90px) scale(2.5); opacity: 0.7; }
+      100% { transform: translate(-50px, 110px) scale(0.4); opacity: 0.05; }
+    }
+
+    /* ================================================================
+       KONTEN — di atas semua efek
+       ================================================================ */
+    .content {
+      position: relative;
+      z-index: 5;
+    }
+
+    /* ================================================================
+       BADGE ATAS
+       ================================================================ */
+    .top-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      background: rgba(255, 255, 255, 0.02);
+      backdrop-filter: blur(4px);
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      padding: 8px 28px 8px 20px;
+      border-radius: 60px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 1.6px;
+      text-transform: uppercase;
+      color: #8a9bb5;
+      margin-bottom: 36px;
+    }
+    .top-badge .dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: #34d399;
+      display: inline-block;
+      animation: pulseDot 2.6s ease-in-out infinite;
+      box-shadow: 0 0 18px rgba(52, 211, 153, 0.30);
+    }
+    @keyframes pulseDot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.15; transform: scale(0.55); }
+    }
+
+    /* ================================================================
+       NAMA
+       ================================================================ */
+    .name {
+      font-size: 88px;
+      font-weight: 900;
+      letter-spacing: -3px;
+      line-height: 1.02;
+      background: linear-gradient(150deg, #ffffff 0%, #d1d9e8 40%, #9aaec9 80%, #b8c8e0 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 8px;
+      text-shadow: 0 0 100px rgba(140, 90, 255, 0.06);
+    }
+
+    .sub-badge {
+      display: block;
+      font-size: 14px;
+      font-weight: 400;
+      letter-spacing: 6px;
+      text-transform: uppercase;
+      color: #5a6e8a;
+      -webkit-text-fill-color: #5a6e8a;
+      margin-bottom: 44px;
+    }
+
+    /* ================================================================
+       DIVIDER
+       ================================================================ */
+    .divider {
+      width: 72px;
+      height: 2px;
+      margin: 0 auto 44px;
+      background: linear-gradient(90deg, transparent, rgba(140, 90, 255, 0.25), rgba(0, 220, 200, 0.25), transparent);
+      border-radius: 4px;
+    }
+
+    /* ================================================================
+       INFO ITEMS
+       ================================================================ */
+    .info-list {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 48px;
+    }
+
+    .info-item {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      padding: 18px 32px;
+      border-radius: 80px;
+      font-size: 19px;
+      font-weight: 420;
+      color: #d1d9e8;
+      background: rgba(255, 255, 255, 0.01);
+      border: 1px solid transparent;
+      transition: all 0.35s ease;
+      width: 100%;
+      max-width: 520px;
+      backdrop-filter: blur(2px);
+      transform: translateZ(20px);
+    }
+
+    .info-item:hover {
+      background: rgba(255, 255, 255, 0.02);
+      border-color: rgba(255, 255, 255, 0.05);
+      transform: scale(1.02) translateZ(30px);
+    }
+
+    .info-item .icon {
+      font-size: 24px;
+      flex-shrink: 0;
+      opacity: 0.55;
+      filter: grayscale(0.2);
+    }
+
+    .info-item a {
+      color: #d1d9e8;
+      text-decoration: none;
+      border-bottom: 1px solid transparent;
+      transition: all 0.3s ease;
+    }
+
+    .info-item a:hover {
+      color: #c4b5fd;
+      border-bottom-color: rgba(140, 90, 255, 0.20);
+    }
+
+    /* ================================================================
+       COPYRIGHT
+       ================================================================ */
+    .footer-line {
+      width: 80px;
+      height: 1px;
+      margin: 0 auto 26px;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.04), transparent);
+    }
+
+    .footer {
+      font-size: 13px;
+      font-weight: 350;
+      letter-spacing: 0.8px;
+      color: #3f4d66;
+      transform: translateZ(10px);
+    }
+    .footer span {
+      color: #5a6e8a;
+    }
+
+    /* ================================================================
+       RESPONSIVE
+       ================================================================ */
+    @media (max-width: 720px) {
+      .card { padding: 48px 28px 40px; border-radius: 52px; }
+      .name { font-size: 56px; letter-spacing: -1.5px; }
+      .info-item { font-size: 16px; padding: 14px 20px; gap: 14px; max-width: 100%; flex-wrap: wrap; border-radius: 60px; }
+      .info-item .icon { font-size: 19px; }
+      .top-badge { font-size: 10px; padding: 5px 18px 5px 14px; }
+      .sub-badge { font-size: 12px; letter-spacing: 4px; }
+      .divider { width: 48px; margin-bottom: 32px; }
+    }
+
+    @media (max-width: 430px) {
+      .card { padding: 32px 16px 28px; border-radius: 36px; }
+      .name { font-size: 38px; }
+      .info-item { font-size: 13px; padding: 12px 12px; gap: 10px; }
+      .info-item .icon { font-size: 15px; }
+      .sub-badge { font-size: 10px; letter-spacing: 3px; }
+      .top-badge { font-size: 9px; padding: 4px 14px 4px 10px; letter-spacing: 1px; }
+      .divider { width: 36px; margin-bottom: 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="card" id="tiltCard">
+
+  <!-- ===== PARTIKEL MIKRO (32 butir) ===== -->
+  <div class="micro-particles">
+    <span></span><span></span><span></span><span></span><span></span>
+    <span></span><span></span><span></span><span></span><span></span>
+    <span></span><span></span><span></span><span></span><span></span>
+    <span></span><span></span><span></span><span></span><span></span>
+    <span></span><span></span><span></span><span></span><span></span>
+    <span></span><span></span><span></span><span></span><span></span>
+    <span></span><span></span>
+  </div>
+
+  <!-- ===== GLOW KETIGA ===== -->
+  <div class="glow-3"></div>
+
+  <!-- ===== KONTEN ===== -->
+  <div class="content">
+
+    <!-- BADGE -->
+    <div class="top-badge">
+      <span class="dot"></span> available
+    </div>
+
+    <!-- NAMA -->
+    <div class="name">Riza</div>
+    <span class="sub-badge">based in indonesia</span>
+
+    <div class="divider"></div>
+
+    <!-- INFO -->
+    <div class="info-list">
+      <div class="info-item">
+        <span class="icon">📍</span>
+        <span>Wonosobo, Jawa Tengah</span>
+      </div>
+      <div class="info-item">
+        <span class="icon">✉</span>
+        <a href="mailto:muhammadkhusnaghoiriza@gmail.com">
+          muhammadkhusnaghoiriza@gmail.com
+        </a>
+      </div>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="footer-line"></div>
+    <div class="footer">
+      © <span id="year">2026</span> Riza. All rights reserved.
+    </div>
+
+  </div>
+</div>
+
+<script>
+  // ================================================================
+  // 3D TILT EFEK — KELAS DUNIA!
+  // ================================================================
+  const card = document.querySelector('.card');
+
+  document.addEventListener('mousemove', (e) => {
+    const xAxis = (window.innerWidth / 2 - e.pageX) / 25;
+    const yAxis = (window.innerHeight / 2 - e.pageY) / 25;
+    card.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
+  });
+
+  // Reset posisi saat kursor keluar dari layar
+  document.addEventListener('mouseleave', () => {
+    card.style.transition = 'transform 0.6s cubic-bezier(0.23, 1, 0.32, 1)';
+    card.style.transform = 'rotateY(0deg) rotateX(0deg)';
+  });
+
+  // Saat mouse masuk kartu, nonaktifkan transisi agar gerakan langsung responsif
+  card.addEventListener('mouseenter', () => {
+    card.style.transition = 'none';
+  });
+
+  // Saat mouse keluar kartu, aktifkan transisi halus untuk kembali ke posisi awal
+  card.addEventListener('mouseleave', () => {
+    card.style.transition = 'transform 0.6s cubic-bezier(0.23, 1, 0.32, 1)';
+    card.style.transform = 'rotateY(0deg) rotateX(0deg)';
+  });
+
+  // Auto-update tahun
+  document.getElementById('year').textContent = new Date().getFullYear();
+</script>
+
+</body>
+</html>
